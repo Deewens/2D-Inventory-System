@@ -15,7 +15,21 @@ namespace InventorySystem.UI.PapyrusTheme
                 UIInventorySlotPapyrusTheme newItemSlot =
                     (UIInventorySlotPapyrusTheme) Instantiate(itemSlotPrefab, Vector3.zero, Quaternion.identity);
                 UIItemSlotList.Add(newItemSlot);
+                
+                newItemSlot.SetInventoryItem(item);
+                newItemSlot.OnItemSlotClicked += HandleItemClick;
+                newItemSlot.OnItemSlotRightClicked += HandleItemRightClick;
             }
+        }
+
+        private void HandleItemClick(UIInventorySlot item)
+        {
+            Debug.Log("Test");
+        }
+
+        private void HandleItemRightClick(UIInventorySlot obj)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

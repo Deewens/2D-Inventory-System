@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +27,8 @@ namespace InventorySystem.UI
                 _inventory.InventoryChanged += RefreshInventorySlots;
             }
         }
+
+        public event Action<UIInventorySlot> OnItemActionRequested;
 
 
         private void Awake()

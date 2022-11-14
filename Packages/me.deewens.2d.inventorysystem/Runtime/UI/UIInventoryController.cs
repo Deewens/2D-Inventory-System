@@ -22,6 +22,12 @@ namespace InventorySystem.UI
             }
 
             openCloseInventoryAction.performed += OnOpenInventory;
+            UIInventory.OnItemActionRequested += HandleItemActionRequest;
+        }
+
+        private void HandleItemActionRequest(UIInventorySlot obj)
+        {
+            throw new NotImplementedException();
         }
 
         private void OnEnable()
