@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace InventorySystem.ScriptableObjects
@@ -6,40 +7,54 @@ namespace InventorySystem.ScriptableObjects
     [CreateAssetMenu(fileName = "New Inventory", menuName = "Inventory System/Inventory")]
     public class InventorySO : ScriptableObject
     {
-        [SerializeField] private List<InventoryItem> inventoryItems;
+        [field: SerializeField] public List<InventoryItem> Items { get; private set; } = new();
+        public event Action InventoryChanged;
 
-        [field: SerializeField] public int Size { get; private set; } = 10;
-
-        public void Initialise()
+        public void AddItem(ItemSO itemData)
         {
-            inventoryItems = new List<InventoryItem>();
-            for (int i = 0; i < Size; i++)
+            Debug.Log("Adding item to inventory: " + itemData);
+
+            if (itemData.IsStackable)
             {
-                inventoryItems.Add(new InventoryItem());
+                InventoryItem item = Items.Find(item => item.ItemData == itemData);
+                if (item == null)
+                {
+                    Items.Add(new InventoryItem(itemData));
+                }
+                else
+                {
+                    item.Quantity++;
+                }
             }
-        }
-    }
-
-    [SerializeField]
-    public struct InventoryItem
-    {
-        /// <summary>
-        /// Item data stored in the inventory
-        /// </summary>
-        public ItemSO ItemData;
-
-        /// <summary>
-        /// Quantity of this item stored in the inventory
-        /// </summary>
-        public int Quantity;
-
-        public InventoryItem SetQuantity(int newQuantity)
-        {
-            return new InventoryItem
+            else
             {
-                ItemData = this.ItemData,
-                Quantity = newQuantity
-            };
+                Items.Add(new InventoryItem(itemData));
+            }
+
+            InventoryChanged?.Invoke();
+        }
+
+        public void RemoveItem(ItemSO itemData)
+        {
+            InventoryItem item = Items.Find(item => item.ItemData == itemData);
+
+            if (item != null)
+            {
+                if (itemData.IsStackable)
+                {
+                    item.Quantity--;
+                    if (item.Quantity == 0)
+                    {
+                        Items.Remove(item);
+                    }
+                }
+                else
+                {
+                    Items.Remove(item);
+                }
+            }
+
+            InventoryChanged?.Invoke();
         }
     }
 }

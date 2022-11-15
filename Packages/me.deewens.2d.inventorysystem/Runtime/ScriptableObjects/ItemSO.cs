@@ -6,7 +6,6 @@ namespace InventorySystem.ScriptableObjects
     public class ItemSO : ScriptableObject
     {
         public int ID => GetInstanceID();
-
         [field: SerializeField] public string Name { get; set; }
 
         [field: SerializeField, TextArea] public string Description { get; set; }
